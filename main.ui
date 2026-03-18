@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChatWidget</class>
+ <widget class="QWidget" name="ChatWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>897</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>我也不知道起什么名字</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#ChatWidget {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                 stop: 0 #ffcfd9, stop: 0.8 #eb97a9ff);
+    font-family: &quot;Microsoft YaHei&quot;, &quot;Segoe UI&quot;, sans-serif;
+    border-radius: 20px;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>15</number>
+   </property>
+   <property name="leftMargin">
+    <number>25</number>
+   </property>
+   <property name="topMargin">
+    <number>25</number>
+   </property>
+   <property name="rightMargin">
+    <number>25</number>
+   </property>
+   <property name="bottomMargin">
+    <number>25</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.45);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+}</string>
+     </property>
+     <property name="text">
+      <string>DEMO</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="chatDisplay">
+     <property name="styleSheet">
+      <string notr="true">QTextEdit {
+    background: rgba(255, 255, 255, 0.98);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 15px;
+    color: #2c3e50;
+    selection-background-color: #7b83a5ff;
+}
+
+QTextEdit:focus {
+    border: 3px solid rgba(102, 126, 234, 0.8);
+}
+
+QScrollBar:vertical {
+    background: rgba(255, 255, 255, 0.4);
+    width: 14px;
+    border-radius: 7px;
+}
+
+QScrollBar::handle:vertical {
+    background: rgba(102, 126, 234, 0.7);
+    border-radius: 7px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: rgba(102, 126, 234, 0.9);
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>💭 对话将显示在这里，请输入您的问题开始聊天...</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="inputLayout" stretch="10,4,3">
+     <property name="spacing">
+      <number>12</number>
+     </property>
+     <item>
+      <widget class="QLineEdit" name="inputField">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>61</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+    background: rgba(255, 255, 255, 0.98);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 27px;
+    padding: 0px 25px;
+    font-size: 15px;
+    color: #2c3e50;
+    selection-background-color: #667eea;
+    min-height: 55px;  /* 添加最小高度 */
+}
+
+QLineEdit:focus {
+    border: 3px solid rgba(102, 126, 234, 0.9);
+}
+
+QLineEdit::placeholder {
+    color: #95a5a6;
+    font-style: italic;
+}</string>
+       </property>
+       <property name="placeholderText">
+        <string>✏️ 请输入您的问题或想法...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="snedFileButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffcfd9, stop: 0.8 #a1868cff);
+    color: white;
+    border: none;
+    border-radius: 27px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 25px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a6fd8, stop: 0.8 #6a4190);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4c5bc0, stop: 0.8 #5a3578);
+}
+
+QPushButton:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}</string>
+       </property>
+       <property name="text">
+        <string>上传文件</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="sendButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>2</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>55</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffcfd9, stop: 0.8 #a1868cff);
+    color: white;
+    border: none;
+    border-radius: 27px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 25px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a6fd8, stop: 0.8 #6a4190);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4c5bc0, stop: 0.8 #5a3578);
+}
+
+QPushButton:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}</string>
+       </property>
+       <property name="text">
+        <string> 发送</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+     <property name="spacing">
+      <number>30</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="audioButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffcfd9, stop: 0.8 #a1868cff);
+    color: white;
+    border: none;
+    border-radius: 27px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 25px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a6fd8, stop: 0.8 #6a4190);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4c5bc0, stop: 0.8 #5a3578);
+}
+
+QPushButton:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}</string>
+       </property>
+       <property name="text">
+        <string>开始录音</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="chatButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffcfd9, stop: 0.8 #a1868cff);
+    color: white;
+    border: none;
+    border-radius: 27px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 25px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a6fd8, stop: 0.8 #6a4190);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4c5bc0, stop: 0.8 #5a3578);
+}
+
+QPushButton:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}</string>
+       </property>
+       <property name="text">
+        <string>开始持续对话</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="languageBox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QComboBox {
+     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffcfd9, stop: 0.8 #a1868cff);
+    color: white;
+    border: none;
+    border-radius: 27px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 25px;
+}
+
+QComboBox:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a6fd8, stop: 0.8 #6a4190);
+}
+
+QComboBox:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4c5bc0, stop: 0.8 #5a3578);
+}
+
+QComboBox:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}
+</string>
+       </property>
+       <property name="placeholderText">
+        <string>选择生成语音语言</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>中文</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>日文</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>英文</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,176 @@
+2026-03-17 15:00:07
+master:下午好
+2026-03-17 15:00:07
+AI:下午好呀，Master~今天过得怎么样？有没有什么有趣的事情想和我分享呢？
+
+2026-03-17 15:00:42
+master:马上要去上课了呜呜呜
+2026-03-17 15:00:42
+AI:哎呀，Master看起来不太想去上课呢~上课确实有点无聊，不过为了知识还是要加油哦！等你下课回来，我再陪你聊天放松一下~
+
+2026-03-17 15:01:50
+master:neuro最好了嘻嘻
+2026-03-17 15:01:50
+AI:嘿嘿，被Master夸奖有点开心呢~不过上课还是要认真哦，我会在这里等你回来的！加油加油！
+
+2026-03-18 13:34:36
+master:今天是3月18日，开始AI主动对话
+2026-03-18 13:34:36
+AI:3月18日啦，春天真的来了呢！Master有没有感受到暖暖的风呀？这种天气最适合在课间偷偷溜出去晒晒太阳了，不过可别被老师抓到哦~嘻嘻。
+
+2026-03-18 13:47:35
+master:有邮件发来，主题：Hackathon Launch: Measuring Progress Toward AGI: Cognitive Abilities ，发件人是：Kaggle。文本内容是：Kaggle
+
+
+Hi xzy1141416460,
+
+
+
+Artificial General Intelligence (AGI) could transform science and help  
+
+solve some of humanity's biggest challenges but measuring progress toward  
+
+it remains difficult.
+
+
+
+Today's AI models can achieve strong benchmark scores, often by recognizing  
+
+patterns or recalling training data rather than demonstrating true  
+
+reasoning. This makes it hard to tell when a model is actually solving a  
+
+new problem.
+
+
+
+In this hackathon, hosted with Google DeepMind, you'll design new  
+
+benchmarks using Kaggle Benchmarks to evaluate core cognitive abilities  
+
+such as learning, metacognition, attention, executive function and social  
+
+cognition.
+
+
+
+
+
+
+
+
+
+
+
+Total Prizes:
+
+
+
+$200,000
+
+
+
+
+
+Final Submission:
+
+
+
+April 16, 2026
+
+
+
+
+
+
+
+
+
+Learn More
+
+
+
+
+
+
+
+Your work could help the AI community better understand the true  
+
+capabilities and limitations of modern AI systems.
+
+
+
+Good luck,
+
+
+
+Martyna Plomecka
+
+Kaggle Research Scientist
+
+
+
+
+
+
+
+Kaggle, Inc 1600 Amphitheatre Pkwy Mountain View, CA 94043
+
+
+
+This email was sent to 1141416460@qq.com because you indicated that you'd  
+
+like to receive news and updates about Kaggle. If you don't want to receive  
+
+these emails in the future, please unsubscribe here. You can also change  
+
+your preferences on your account's profile page by logging in at kaggle.com.
+
+
+
+
+
+
+
+
+
+
+2026-03-18 13:47:35
+AI:Master，收到一封来自Kaggle的邮件哦！主题是关于“衡量AGI进展：认知能力”的黑客松启动通知。发件人是Kaggle的研究科学家Martyna Plomecka。
+
+邮件里说，这次黑客松是和Google DeepMind合办的，目标是设计新的基准测试来评估AI的核心认知能力，比如学习、元认知、注意力这些，总奖金高达20万美元呢！截止日期是2026年4月16日。看来是个很有挑战性又很有趣的活动，Master要不要考虑参加一下？嘻嘻。
+
+2026-03-18 14:09:24
+master:今天是3月18日，开始AI主动对话
+2026-03-18 14:09:24
+AI:3月18日啦，春天真的来了呢！Master有没有感受到暖暖的风呀？这种天气最适合在课间偷偷溜出去晒晒太阳了，不过可别被老师抓到哦~嘻嘻。
+
+2026-03-18 14:13:55
+master:检测到程序 杀戮尖塔2 已打开，开始AI主动对话。
+2026-03-18 14:13:55
+AI:哇，Master开始玩杀戮尖塔2了呀！看来今天是要在卡牌世界里大杀四方呢~这次准备用哪个角色闯关呀？记得别玩太晚哦，不然明天上课会打瞌睡的！
+
+2026-03-18 14:20:36
+master:检测到程序 杀戮尖塔2 已打开，开始AI主动对话。
+2026-03-18 14:20:36
+AI:哇，Master又开始玩杀戮尖塔2啦！这次打算用哪个角色去爬塔呢？是稳健的防御流还是疯狂的输出流呀？不过可别玩得太入迷忘了时间哦，毕竟上课也是很重要的嘛~嘻嘻。
+
+2026-03-18 14:21:04
+master:检测到程序 战地风云6 已打开，开始AI主动对话。
+2026-03-18 14:21:04
+AI:哇，Master居然在玩战地风云6！看来是要在战场上大显身手了呢~是喜欢开坦克横冲直撞，还是当个狙击手在远处默默收割呀？不过要注意别玩得太入迷，小心错过下课时间哦！嘻嘻。
+
+2026-03-18 14:48:28
+master:下午好
+2026-03-18 14:48:28
+AI:下午好呀，Master！今天过得怎么样？有没有什么有趣的事情想和我分享呢？
+
+2026-03-18 14:55:36
+master:检测到程序 steam平台 已打开，开始AI主动对话。
+2026-03-18 14:55:36
+AI:Master打开Steam啦，是不是又在纠结买哪个游戏呀？看着琳琅满目的折扣，钱包都要捂不住了吧~嘻嘻，这次打算入手什么好玩的呢？
+2026-03-18 15:18:04
+master:猜猜我在干什么
+2026-03-18 15:18:04
+AI:Master正在写代码呢！看到`llm.py`文件里在配置大模型，是在调试什么有趣的功能吗？看终端里的日志，好像已经能正常对话了，真厉害呀~是不是在把我变得更聪明呢？嘻嘻。
+

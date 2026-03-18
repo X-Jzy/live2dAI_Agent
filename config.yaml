@@ -1,0 +1,73 @@
+app:
+  name: AI互动系统
+  version: 1.0.0
+llm:
+  api_key: sk-4GrkzGCvJaHAT0OqOxXMYMXMCX4U4TBNQa7sbPYaN5XVG66y
+  base_url: https://api.moonshot.cn/v1
+  model: qwen3.5:2b
+  temperature: 0.3
+  max_memory: 30
+  prompt_file: neuro.txt
+weather:
+  api_key: 8abe63cc3520e23b57507ad0d101eb60
+  city_code: 120000
+tts:
+  api_url: http://127.0.0.1:9880/tts
+  output_file: C:\Users\X.J\Desktop\live2d_ai\gui\output.wav
+  ref_audio_path: C:\Users\X.J\Desktop\TTS模型\牛肉\参考音频.wav
+  prompt_text: You want me to get rid of that chat member there are 10,000 other ways
+    to teach you a lesson
+  prompt_lang: en
+  text_lang: zh
+  text_split_method: cut2
+  batch_size: 1
+  media_type: wav
+  streaming_mode: false
+live2d:
+  websocket_uri: ws://127.0.0.1:10086/api
+  default_expression: normal
+  expressions_path: expressions/
+audio_record:
+  chunk: 1024
+  format: paInt16
+  channels: 1
+  rate: 44100
+  default_output: record.wav
+  max_duration: 20
+vad:
+  chunk: 1024
+  format: paInt16
+  channels: 1
+  rate: 16000
+  threshold: 1000
+  speech_timeout: 10.0
+  min_speech_duration: 0.8
+  silence_limit: 1.5
+  pre_speech: 1
+  temp_recording_prefix: temp_recording_
+asr:
+  model: paraformer-zh
+  vad_model: fsmn-vad
+  punc_model: ct-punc-c
+  spk_model: cam++
+  default_audio_path: C:\Users\X.J\Desktop\live2d_ai\gui\record.wav
+email:
+  imap_server: imap.qq.com
+  ssl: true
+  port: 993
+  username: 1141416460@qq.com
+  password: mvfomblfljqsbaeh
+  folder: INBOX
+  check_interval: 1
+game:
+  process_names: [["cloudmusic.exe","网易云音乐"], ["steam.exe","steam平台"],["BsgLauncher.exe","逃离塔科夫"],["bf6.exe","战地风云6"],["SlayTheSpire2.exe","杀戮尖塔2"]]
+  check_interval: 2
+ui:
+  title: 早濑优香互动界面
+  default_style:
+    user_message_bg: '#95EC69'
+    ai_message_bg: '#FF0'
+    text_color: '#000'
+    timestamp_color: '#999'
+    font_size: 14
+    expression_size: 20%
