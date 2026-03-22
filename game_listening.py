@@ -1,6 +1,5 @@
 import psutil
 import time
-import threading
 from PySide6.QtCore import Signal, QObject
 import llm
 from config import config
@@ -14,23 +13,6 @@ game_signal = GameSignal()
 
 # 全局字典，记录每个游戏进程是否已检测到
 detected_games = {}
-
-def check_single_game(process_name):
-    """
-    检测指定单个游戏进程是否运行
-    :param process_name: 游戏进程名（如"Minecraft.exe"）
-    :return: bool，是否运行
-    """
-    # 遍历所有正在运行的进程
-    for proc in psutil.process_iter(['name']):
-        try:
-            # 忽略大小写匹配进程名
-            if proc.info['name'].lower() == process_name.lower():
-                return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            # 跳过无权限/已结束的进程
-            continue
-    return False
 
 def listen_game():
     # 从配置获取游戏参数

@@ -15,14 +15,14 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import VectorParams, Distance, PointStruct
 from sentence_transformers import SentenceTransformer
 import numpy as np
-import rag.rag
+import memory.rag
+import memory.graph_memory
 
 from langchain_ollama.chat_models import ChatOllama
 from langchain.agents import create_agent
 
 from langchain_openai import ChatOpenAI
-import tools.tools
-from tools.tools import (get_weather_tool,get_memory_tool,get_screenshot_tool,get_motion_tool)
+# from tools.tools import (get_weather_tool,get_memory_tool,get_screenshot_tool,get_motion_tool,online_search_tool)  # 移到函数内部
 
 # 读取预设（从配置获取路径）
 prompt_file = config.get("llm.prompt_file", "prompt.txt")
@@ -45,20 +45,38 @@ qwen = ChatOpenAI(
     extra_body={"enable_thinking": False}
 )
 
-agent = create_agent(
-    #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
-    model=qwen,
-    system_prompt=prompt_file,
-    tools=[get_weather_tool,get_memory_tool,get_screenshot_tool,get_motion_tool],
-    middleware=[],
-)
+def get_agent():
+    from tools.tools import (get_weather_tool,get_screenshot_tool,get_motion_tool,online_search_tool,graph_search_tool)
+    return create_agent(
+        #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
+        model=qwen,
+        system_prompt=prompt_file,
+        tools=[get_weather_tool,get_screenshot_tool,get_motion_tool,online_search_tool,graph_search_tool],
+        middleware=[],
+    )
 
-agent_nopic = create_agent(
-    #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
-    model=qwen,
-    tools=[],
-    middleware=[],
-)
+def get_agent_nopic():
+    return create_agent(
+        #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
+        model=qwen,
+        tools=[],
+        middleware=[],
+    )
+
+# agent = create_agent(
+#     #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
+#     model=qwen,
+#     system_prompt=prompt_file,
+#     tools=[get_weather_tool,get_memory_tool,get_screenshot_tool,get_motion_tool,online_search_tool],
+#     middleware=[],
+# )
+
+# agent_nopic = create_agent(
+#     #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
+#     model=qwen,
+#     tools=[],
+#     middleware=[],
+# )
 # kimi = OpenAI(
 #     api_key="sk-4GrkzGCvJaHAT0OqOxXMYMXMCX4U4TBNQa7sbPYaN5XVG66y",  
 #     base_url="https://api.moonshot.cn/v1",
@@ -174,6 +192,7 @@ def make_new_messages(input: str , n: int = None) -> list[dict]:
 
 # 聊天函数
 def chat(input: str):
+    from tools.tools import motion_id
     # answer = check_weather_intent(input)
     # if answer == "是":
     #     weather_data = weather.get_weather(0)
@@ -182,7 +201,7 @@ def chat(input: str):
     #     weather_data = weather.get_weather(1)
     #     input = f"今天是{time.localtime()},用户问：{input}\n天气api的调用结果：{weather_data}\n请根据天气数据回答用户的问题。"
     
-    res = agent.invoke({
+    res = get_agent().invoke({
         "messages":make_new_messages(input)
     })
     print(res)
@@ -221,19 +240,24 @@ def chat(input: str):
     get_tts_audio(res)
     # print("英文回复:" + message_en)
 
-    #加入记忆系统
+    # 发送回复到Live2D
+    live2d_api.send_json_message(res)
+    live2d_api.send_sound()
+    live2d_api.send_motion(motion_id)
+
+    # 短期记忆
     with open("memory.txt","a+",encoding='utf-8') as f:
         f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"master:"+input+"\n") 
         f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"AI:"+res+"\n"+"\n") 
 
+    # RAG记忆
     hybrid_text = "Master:"+input+" "+"AI:"+res
-    rag.rag.store_chat(hybrid_text)
+    memory.rag.store_chat(hybrid_text)
 
-    # 发送回复到Live2D
-    live2d_api.send_json_message(res)
-    live2d_api.send_sound()
-    live2d_api.send_motion(tools.tools.motion_id)
-    
+    # 五元组Graph记忆
+    quintuples = memory.graph_memory.extract_quintuples(hybrid_text)
+    memory.graph_memory.store_quintuples(quintuples)
+
     return res
 
 def handle_text(text: str):
@@ -297,14 +321,13 @@ def picture_analysis(pic_url: str, input: str):
     else:
         image_repr = pic_url
 
-    # 构造消息：把 image_url.url 设置为字符串（data URI 或远程 URL）
     msg = {"role": "user", "content": [
         {"type": "text", "text": prompt},
         {"type": "image_url", "image_url": {"url": image_repr}},
     ]}
     messages.append(msg)
 
-    res = agent_nopic.invoke({
+    res = get_agent_nopic().invoke({
         "messages":messages
     })
 

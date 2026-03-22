@@ -6,10 +6,14 @@ from qdrant_client.http.models import VectorParams, Distance, PointStruct
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
-client = QdrantClient(host="localhost", port=6333)
+from config import config  
+
+rag_config = config.get("rag", {})
+
+client = QdrantClient(host=rag_config.get("host","localhost"), port=rag_config.get("port",6333))
 
 # 使用 sentence-transformers 生成文本嵌入，括号内模型可上huggingface寻找替换
-model = SentenceTransformer('shibing624/text2vec-base-chinese')
+model = SentenceTransformer(rag_config.get("SentenceTransformer"),'shibing624/text2vec-base-chinese')
 
 def store_chat(input:str):
     embeddings = model.encode(input, convert_to_numpy=True)

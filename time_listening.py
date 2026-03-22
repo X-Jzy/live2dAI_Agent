@@ -10,7 +10,7 @@ class TimeSignal(QObject):
 
 time_signal = TimeSignal()
 
-listening_date = [[1,1],[2,14],[4,1],[5,1],[6,1],[7,1],[8,1],[9,1],[10,1],[12,27],[3,18]]
+listening_date = [[1,1],[2,14],[4,1],[5,1],[6,1],[7,1],[8,1],[9,1],[10,1],[12,27]]
 listening_time=[0,8,12,14,17,20,22]
 
 localtime = time.localtime(time.time())

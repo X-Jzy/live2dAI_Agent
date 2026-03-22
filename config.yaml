@@ -1,22 +1,21 @@
 app:
-  name: AI互动系统
+  name: Live2d——Agent
   version: 1.0.0
 llm:
-  api_key: sk-4GrkzGCvJaHAT0OqOxXMYMXMCX4U4TBNQa7sbPYaN5XVG66y
+  api_key: 
   base_url: https://api.moonshot.cn/v1
   model: qwen3.5:2b
   temperature: 0.3
   max_memory: 30
-  prompt_file: neuro.txt
+  prompt_file:
 weather:
-  api_key: 8abe63cc3520e23b57507ad0d101eb60
-  city_code: 120000
+  api_key: 
+  city_code: 
 tts:
   api_url: http://127.0.0.1:9880/tts
-  output_file: C:\Users\X.J\Desktop\live2d_ai\gui\output.wav
-  ref_audio_path: C:\Users\X.J\Desktop\TTS模型\牛肉\参考音频.wav
-  prompt_text: You want me to get rid of that chat member there are 10,000 other ways
-    to teach you a lesson
+  output_file:
+  ref_audio_path:
+  prompt_text:
   prompt_lang: en
   text_lang: zh
   text_split_method: cut2
@@ -50,20 +49,20 @@ asr:
   vad_model: fsmn-vad
   punc_model: ct-punc-c
   spk_model: cam++
-  default_audio_path: C:\Users\X.J\Desktop\live2d_ai\gui\record.wav
+  default_audio_path: 
 email:
   imap_server: imap.qq.com
   ssl: true
   port: 993
-  username: 1141416460@qq.com
-  password: mvfomblfljqsbaeh
+  username: 
+  password: 
   folder: INBOX
   check_interval: 1
 game:
   process_names: [["cloudmusic.exe","网易云音乐"], ["steam.exe","steam平台"],["BsgLauncher.exe","逃离塔科夫"],["bf6.exe","战地风云6"],["SlayTheSpire2.exe","杀戮尖塔2"]]
   check_interval: 2
 ui:
-  title: 早濑优香互动界面
+  title: Live2d_Agent
   default_style:
     user_message_bg: '#95EC69'
     ai_message_bg: '#FF0'
@@ -71,3 +70,11 @@ ui:
     timestamp_color: '#999'
     font_size: 14
     expression_size: 20%
+rag:
+  host: localhost
+  prot: 6333
+  SentenceTransformer: 'shibing624/text2vec-base-chinese'
+graph:
+  neo4j_url: neo4j://localhost:7475
+  username: 
+  password: 

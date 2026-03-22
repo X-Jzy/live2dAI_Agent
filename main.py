@@ -207,9 +207,9 @@ class ChatGUI(QObject):
         self.add_message_to_display("AI", pure_text, expression, False)
         
         # 发送回复到Live2D（文字+音频）
-        live2d_api.send_json_message(pure_text)
-        live2d_api.send_sound()
-        live2d_api.send_motion(tools.tools.motion_id)
+        # live2d_api.send_json_message(pure_text)
+        # live2d_api.send_sound()
+        # live2d_api.send_motion(tools.tools.motion_id)
         
     #语音识别
     def handle_audio(self):         
