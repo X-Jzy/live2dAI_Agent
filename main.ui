@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>897</height>
+    <width>748</width>
+    <height>967</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -253,7 +253,7 @@ QPushButton:disabled {
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1,0">
      <property name="spacing">
       <number>30</number>
      </property>
@@ -294,6 +294,46 @@ QPushButton:disabled {
        </property>
        <property name="text">
         <string>开始录音</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="gameButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #ffcfd9, stop: 0.8 #a1868cff);
+    color: white;
+    border: none;
+    border-radius: 27px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 25px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #5a6fd8, stop: 0.8 #6a4190);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4c5bc0, stop: 0.8 #5a3578);
+}
+
+QPushButton:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}</string>
+       </property>
+       <property name="text">
+        <string>屏幕监听</string>
        </property>
       </widget>
      </item>

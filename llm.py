@@ -2,14 +2,16 @@ import base64
 import json
 import mimetypes
 import os
+import threading
 import requests
 from openai import OpenAI
 import re
-from tts import get_tts_audio
+from tts import get_tts_audio, get_tts_audio_stream
 from config import config  # 新增
 import time
 import ollama
 import live2d_api
+from zai import ZhipuAiClient
 
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import VectorParams, Distance, PointStruct
@@ -37,11 +39,31 @@ except Exception as e:
 # 调用kimi api（从配置获取参数）
 client = ollama
 
+pic_agent = ZhipuAiClient(api_key=config.get("llm.zhipu_api_key"))
+
+
 qwen = ChatOpenAI(
-    api_key="sk-867816b206984424ba055bf23f25d5ad",  
-    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-    model="qwen3.5-plus-2026-02-15",
-    max_completion_tokens=5000,
+    api_key=config.get("llm.qwen_api_key"),
+    base_url=config.get("llm.qwen_base_url"),
+    model=config.get("llm.qwen_model"),
+    max_completion_tokens=config.get("llm.max_completion_tokens", 5000),
+    extra_body={"enable_thinking": False}
+)
+
+glm = ChatOpenAI(
+    openai_api_key=config.get("llm.glm_api_key"),
+    openai_api_base=config.get("llm.glm_base_url"),
+    model=config.get("llm.glm_model"),
+    #model="GLM-4-Flash-250414",
+    max_completion_tokens=config.get("llm.max_completion_tokens", 5000),
+    extra_body={"enable_thinking": False}
+)
+
+gpt = ChatOpenAI(
+    api_key=config.get("llm.gpt_api_key"),
+    base_url=config.get("llm.gpt_base_url"),
+    model=config.get("llm.gpt_model"),
+    max_completion_tokens=config.get("llm.max_completion_tokens", 5000),
     extra_body={"enable_thinking": False}
 )
 
@@ -49,17 +71,18 @@ def get_agent():
     from tools.tools import (get_weather_tool,get_screenshot_tool,get_motion_tool,online_search_tool,graph_search_tool)
     return create_agent(
         #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
-        model=qwen,
+        model=gpt,
         system_prompt=prompt_file,
         tools=[get_weather_tool,get_screenshot_tool,get_motion_tool,online_search_tool,graph_search_tool],
         middleware=[],
     )
 
 def get_agent_nopic():
+    from tools.tools import (get_motion_tool,online_search_tool,graph_search_tool)
     return create_agent(
         #model=ChatOllama(model="qwen3.5:2b",reasoning=False),
-        model=qwen,
-        tools=[],
+        model=gpt,
+        tools=[get_motion_tool,online_search_tool,graph_search_tool],
         middleware=[],
     )
 
@@ -77,10 +100,7 @@ def get_agent_nopic():
 #     tools=[],
 #     middleware=[],
 # )
-# kimi = OpenAI(
-#     api_key="sk-4GrkzGCvJaHAT0OqOxXMYMXMCX4U4TBNQa7sbPYaN5XVG66y",  
-#     base_url="https://api.moonshot.cn/v1",
-# )
+
 
 # 连接到本地 Qdrant（默认端口 6333），也可以改为托管地址
 QdrantClient = QdrantClient(host="localhost", port=6333)
@@ -95,6 +115,11 @@ system_messages = [
 
 # 聊天记录
 messages = []
+
+# 并发控制：所有 chat 调用串行执行；用户输入优先于主动对话
+_chat_lock = threading.Lock()
+_chat_state_lock = threading.Lock()
+_pending_user_requests = 0
 
 # 从 memory.txt 中读取历史对话并填充到 messages 列表
 def read_memory(messages:list):
@@ -191,74 +216,106 @@ def make_new_messages(input: str , n: int = None) -> list[dict]:
     return new_messages
 
 # 聊天函数
-def chat(input: str):
-    from tools.tools import motion_id
-    # answer = check_weather_intent(input)
-    # if answer == "是":
-    #     weather_data = weather.get_weather(0)
-    #     input = f"今天是{time.localtime()},用户问：{input}\n天气api的调用结果：{weather_data}\n请根据天气数据回答用户的问题。"
-    # elif answer == "未来":
-    #     weather_data = weather.get_weather(1)
-    #     input = f"今天是{time.localtime()},用户问：{input}\n天气api的调用结果：{weather_data}\n请根据天气数据回答用户的问题。"
-    
-    res = get_agent().invoke({
-        "messages":make_new_messages(input)
-    })
-    print(res)
-    latest_message = res["messages"][-1]
-    if latest_message.content:
-        res=latest_message.content.strip()
+def chat(input: str, source: str = "user"):
+    global _pending_user_requests
 
-    messages.append({
-        "role": "assistant",
-        "content": res
-    })
+    if source not in ("user", "proactive"):
+        source = "user"
 
-    # completion = kimi.chat.completions.create(
-    #     model="moonshot-v1-8k",
-    #     messages=make_new_messages(input),
-    #     # temperature=config.get("llm.temperature", 0.3),  # 从配置获取温度
-    #     #think = False
-    # )
+    # 用户请求到达后，主动对话应当让路
+    if source == "user":
+        with _chat_state_lock:
+            _pending_user_requests += 1
 
-    # message = completion.choices[0].message.content
-    # #message = completion.message.content
-    # messages.append({
-    #     "role": "assistant",
-    #     "content": message
-    # })
+    lock_acquired = False
+    try:
+        if source == "proactive":
+            with _chat_state_lock:
+                if _pending_user_requests > 0:
+                    print("[INFO] 跳过主动对话：检测到用户输入待处理")
+                    return None
 
-    # message_en = message
-    # pure_text_en = handle_text(message_en)  # 提取纯净text
-    # if config.get("tts.text_lang")!="zh":
-    #     get_tts_audio(pure_text_en)
-    # message_zh = translate(message_en)
-    # pure_text_zh = handle_text(message_zh)
-    # if config.get("tts.text_lang")=="zh":
-    #     get_tts_audio(pure_text_zh)
-    print(res)
-    get_tts_audio(res)
-    # print("英文回复:" + message_en)
+            lock_acquired = _chat_lock.acquire(blocking=False)
+            if not lock_acquired:
+                print("[INFO] 跳过主动对话：模型正在处理中")
+                return None
+        else:
+            _chat_lock.acquire()
+            lock_acquired = True
 
-    # 发送回复到Live2D
-    live2d_api.send_json_message(res)
-    live2d_api.send_sound()
-    live2d_api.send_motion(motion_id)
+        from tools.tools import motion_id
+        # answer = check_weather_intent(input)
+        # if answer == "是":
+        #     weather_data = weather.get_weather(0)
+        #     input = f"今天是{time.localtime()},用户问：{input}\n天气api的调用结果：{weather_data}\n请根据天气数据回答用户的问题。"
+        # elif answer == "未来":
+        #     weather_data = weather.get_weather(1)
+        #     input = f"今天是{time.localtime()},用户问：{input}\n天气api的调用结果：{weather_data}\n请根据天气数据回答用户的问题。"
 
-    # 短期记忆
-    with open("memory.txt","a+",encoding='utf-8') as f:
-        f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"master:"+input+"\n") 
-        f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"AI:"+res+"\n"+"\n") 
+        res = get_agent().invoke({
+            "messages": make_new_messages(input)
+        })
+        print(res)
+        latest_message = res["messages"][-1]
+        if latest_message.content:
+            res = latest_message.content.strip()
 
-    # RAG记忆
-    hybrid_text = "Master:"+input+" "+"AI:"+res
-    memory.rag.store_chat(hybrid_text)
+        messages.append({
+            "role": "assistant",
+            "content": res
+        })
 
-    # 五元组Graph记忆
-    quintuples = memory.graph_memory.extract_quintuples(hybrid_text)
-    memory.graph_memory.store_quintuples(quintuples)
+        # completion = kimi.chat.completions.create(
+        #     model="moonshot-v1-8k",
+        #     messages=make_new_messages(input),
+        #     # temperature=config.get("llm.temperature", 0.3),  # 从配置获取温度
+        #     #think = False
+        # )
 
-    return res
+        # message = completion.choices[0].message.content
+        # #message = completion.message.content
+        # messages.append({
+        #     "role": "assistant",
+        #     "content": message
+        # })
+
+        # message_en = message
+        # pure_text_en = handle_text(message_en)  # 提取纯净text
+        # if config.get("tts.text_lang")!="zh":
+        #     get_tts_audio(pure_text_en)
+        # message_zh = translate(message_en)
+        # pure_text_zh = handle_text(message_zh)
+        # if config.get("tts.text_lang")=="zh":
+        #     get_tts_audio(pure_text_zh)
+        print(res)
+        get_tts_audio(res)
+        # print("英文回复:" + message_en)
+
+        # 发送回复到Live2D
+        live2d_api.send_json_message(res)
+        live2d_api.send_sound()
+        live2d_api.send_motion(motion_id)
+
+        # 短期记忆
+        with open("memory.txt", "a+", encoding="utf-8") as f:
+            f.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "\n" + "master:" + input + "\n")
+            f.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "\n" + "AI:" + res + "\n" + "\n")
+
+        # RAG记忆
+        hybrid_text = "Master:" + input + " " + "AI:" + res
+        memory.rag.store_chat(hybrid_text)
+
+        # 五元组Graph记忆
+        quintuples = memory.graph_memory.extract_quintuples(hybrid_text)
+        memory.graph_memory.store_quintuples(quintuples)
+
+        return res
+    finally:
+        if lock_acquired:
+            _chat_lock.release()
+        if source == "user":
+            with _chat_state_lock:
+                _pending_user_requests = max(0, _pending_user_requests - 1)
 
 def handle_text(text: str):
     pattern = r'【[^】]*】'
@@ -337,13 +394,29 @@ def picture_analysis(pic_url: str, input: str):
     if latest_message.content:
         res=latest_message.content.strip()
 
+    get_tts_audio_stream(res)
+
+    # Live2d三连因为等待初次chunk流式输出的原因，放到了tts模块
+    # live2d_api.send_motion(motion_id)
+    # live2d_api.send_json_message(res)
+
     with open("memory.txt","a+",encoding='utf-8') as f:
-        f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"master:"+input+"传入图像:"+pic_url+"\n") 
+        f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"master:"+"传入图像:"+"\n") 
         f.write(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n"+"AI:"+res+"\n"+"\n") 
+
+    import memory.rag
+    import memory.graph_memory
+
+    # RAG记忆
+    hybrid_text = "Master:"+"master:"+"传入图像:"+" "+"AI:"+res
+    memory.rag.store_chat(hybrid_text)
+
+    # 五元组Graph记忆
+    quintuples = memory.graph_memory.extract_quintuples(hybrid_text)
+    memory.graph_memory.store_quintuples(quintuples)
 
     print(res)
 
     # answer = completion.message.content
-    get_tts_audio(res)
-    live2d_api.send_sound()
+
     return res

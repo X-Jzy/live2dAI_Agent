@@ -46,7 +46,10 @@ def listen_time():
             if date[0]==localtime.tm_mon and date[1]==localtime.tm_mday:
                 if not has_broadcasted_today():
                     print("今天是"+str(date[0])+"月"+str(date[1])+"日，触发特殊节日播报")
-                    response = llm.chat("今天是"+str(date[0])+"月"+str(date[1])+"日，开始AI主动对话")
+                    response = llm.chat("今天是"+str(date[0])+"月"+str(date[1])+"日，开始AI主动对话", source="proactive")
+                    if response is None:
+                        print("[INFO] 节日主动播报已跳过，等待用户对话完成")
+                        break
                     pattern = r'【[^】]*】'
                     pure_text = re.sub(pattern, '', response)
                     if pure_text != response:
@@ -60,7 +63,11 @@ def listen_time():
         for cur_time in listening_time:
             if cur_time == localtime.tm_hour and localtime.tm_min==0:     #仅准点触发
                 print("现在是"+str(cur_time)+",触发主动报时")
-                response = llm.chat("现在是"+str(cur_time)+"点，和Master主动打个招呼吧")
+                response = llm.chat("现在是"+str(cur_time)+"点，和Master主动打个招呼吧", source="proactive")
+                if response is None:
+                    print("[INFO] 整点主动播报已跳过，等待用户对话完成")
+                    time.sleep(1)
+                    break
                 pattern = r'【[^】]*】'
                 pure_text = re.sub(pattern, '', response)
                 if pure_text != response:

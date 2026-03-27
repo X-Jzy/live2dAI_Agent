@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtGui import QTextCursor
 from PySide6.QtCore import Signal, QObject
+import game_mode.game_mode
 import tools.tools
 import vad
 import sys
@@ -33,6 +34,7 @@ class ChatGUI(QObject):
         self.ui.sendButton.clicked.connect(self.send_message)
         self.ui.inputField.returnPressed.connect(self.send_message)
         self.ui.audioButton.clicked.connect(self.handle_audio)
+        self.ui.gameButton.clicked.connect(self.game_mode)
         email_signal.new_email.connect(self.add_message_to_display)
         game_signal.game_detected.connect(self.add_message_to_display)
         time_signal.time_detected.connect(self.add_message_to_display)
@@ -190,7 +192,7 @@ class ChatGUI(QObject):
         self.add_message_to_display("你", user_input, "",True)
 
         # 调用LLM获取回复
-        response = llm.chat(user_input)
+        response = llm.chat(user_input, source="user")
 
         """表情传递规则：好吧【害羞】"""
         # 提取纯净text(日文无需)
@@ -211,6 +213,20 @@ class ChatGUI(QObject):
         # live2d_api.send_sound()
         # live2d_api.send_motion(tools.tools.motion_id)
         
+    #屏幕监听
+    def game_mode(self):
+        """启动屏幕监听线程"""
+        if game_mode.game_mode.game_listening == 0:
+            game_mode.game_mode.game_listening=1
+            self.ui.gameButton.setText("停止监听")
+            listener_thread = threading.Thread(target=game_mode.game_mode.game_listen_circle_agent, daemon=True)
+            listener_thread.start()
+            print('[INFO] 启动屏幕监听线程')
+        elif game_mode.game_mode.game_listening==1:
+            game_mode.game_mode.game_listening=0
+            self.ui.gameButton.setText("屏幕监听")
+
+
     #语音识别
     def handle_audio(self):         
         if audio_record.is_recording == 0:     # 未录制中，开始
@@ -236,7 +252,7 @@ class ChatGUI(QObject):
                 self.update_ui_signal.emit("你", user_input,"", True)
                 
                 # 调用LLM获取回复
-                response = llm.chat(user_input)
+                response = llm.chat(user_input, source="user")
                 pattern = r'【[^】]*】'
                 pure_text = re.sub(pattern, '', response)
                 expression = ""
@@ -301,7 +317,7 @@ class ChatGUI(QObject):
             self.update_ui_signal.emit("你", user_input, "", True)
             
             # 调用LLM获取回复
-            response = llm.chat(user_input)
+            response = llm.chat(user_input, source="user")
             
             # 提取表情
             pattern = r'【[^】]*】'

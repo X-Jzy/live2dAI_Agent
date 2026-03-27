@@ -2,20 +2,32 @@ app:
   name: Live2d——Agent
   version: 1.0.0
 llm:
-  api_key: 
+  api_key: YOUR_KIMI_API_KEY
   base_url: https://api.moonshot.cn/v1
   model: qwen3.5:2b
   temperature: 0.3
   max_memory: 30
-  prompt_file:
+  prompt_file: neuro.txt
+  max_completion_tokens: 5000
+  zhipu_api_key: YOUR_ZHIPU_API_KEY
+  qwen_api_key: YOUR_QWEN_API_KEY
+  qwen_base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  qwen_model: qwen3.5-plus-2026-02-15
+  glm_api_key: YOUR_GLM_API_KEY
+  glm_base_url: https://open.bigmodel.cn/api/paas/v4/
+  glm_model: glm-4.7-flash
+  gpt_api_key: YOUR_GPT_API_KEY
+  gpt_base_url: https://ruoli.dev/v1/
+  gpt_model: gpt-5.2
 weather:
-  api_key: 
-  city_code: 
+  api_key: YOUR_WEATHER_API_KEY
+  city_code: 120000
 tts:
   api_url: http://127.0.0.1:9880/tts
-  output_file:
-  ref_audio_path:
-  prompt_text:
+  output_file: C:\Users\X.J\Desktop\live2d_ai\gui\output.wav
+  ref_audio_path: C:\Users\X.J\Desktop\TTS模型\牛肉\参考音频.wav
+  prompt_text: You want me to get rid of that chat member there are 10,000 other ways
+    to teach you a lesson
   prompt_lang: en
   text_lang: zh
   text_split_method: cut2
@@ -49,13 +61,13 @@ asr:
   vad_model: fsmn-vad
   punc_model: ct-punc-c
   spk_model: cam++
-  default_audio_path: 
+  default_audio_path: C:\Users\X.J\Desktop\live2d_ai\gui\record.wav
 email:
   imap_server: imap.qq.com
   ssl: true
   port: 993
-  username: 
-  password: 
+  username: YOUR_EMAIL_USERNAME
+  password: YOUR_EMAIL_PASSWORD
   folder: INBOX
   check_interval: 1
 game:
@@ -76,5 +88,5 @@ rag:
   SentenceTransformer: 'shibing624/text2vec-base-chinese'
 graph:
   neo4j_url: neo4j://localhost:7475
-  username: 
-  password: 
+  username: neo4j
+  password: YOUR_NEO4J_PASSWORD

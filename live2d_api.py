@@ -34,10 +34,10 @@ def get_duration_pydub(file_path):
     audio = AudioSegment.from_file(file_path)
     return len(audio) / 1000.0  # 转换为秒
 
-def send_sound():
+def send_sound(sound_path: str = None):
     # 从配置获取WebSocket地址和音频路径
     ws_uri = config.get("live2d.websocket_uri", "ws://127.0.0.1:10086/api")
-    tts_output = config.get("tts.output_file", "output.wav")
+    tts_output = sound_path or config.get("tts.output_file", "output.wav")
 
     data = {
         "msg": 13500,

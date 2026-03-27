@@ -57,7 +57,10 @@ def get_data():
 
             # 构建完整的邮件信息字符串
             email_info = f"有邮件发来，主题：{message_object.get_subject()}，发件人是：{str(message_object.get_addresses('from')[0][0])}。文本内容是：{text}"
-            response = llm.chat(email_info)
+            response = llm.chat(email_info, source="proactive")
+            if response is None:
+                print("[INFO] 邮件主动播报已跳过，等待用户对话完成")
+                continue
             pattern = r'【[^】]*】'
             pure_text = re.sub(pattern, '', response)
             if pure_text != response:

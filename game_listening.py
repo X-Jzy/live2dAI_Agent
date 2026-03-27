@@ -41,7 +41,10 @@ def listen_game():
                 print(f"检测到新游戏 {process_name[1]} 已打开，开始AI主动对话。")
                 # AI主动对话逻辑
                 game_info = f"检测到程序 {process_name[1]} 已打开，开始AI主动对话。"
-                response = llm.chat(game_info)
+                response = llm.chat(game_info, source="proactive")
+                if response is None:
+                    print("[INFO] 游戏主动播报已跳过，等待用户对话完成")
+                    continue
                 pattern = r'【[^】]*】'
                 pure_text = re.sub(pattern, '', response)
                 if pure_text != response:

@@ -31,23 +31,49 @@ def get_memory_tool(input:str)->list[str]:
 def get_screenshot_tool():
     import llm
 
+    print("截图tool被调用")
+
     # 调用截图模块，返回 data URI 字符串
     img_data_uri = pic_cap()
 
-    msg = [{"role": "user", "content": [
-        {"type": "text", "text": "这是用户屏幕的截图,详细描述图片上的内容,仅仅是描述即可,不要有其他任何多余的输出,仅输出'这张图片描述了xxxxxx'即可"},
-        {"type": "image_url", "image_url": {"url": img_data_uri}},
-    ]}]
+    response = llm.pic_agent.chat.completions.create(
+        model="glm-4.6v-flash", 
+        messages=[
+            {
+                "content": [
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": img_data_uri
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "text": "这是用户屏幕的截图,详细描述图片上的内容,仅仅是描述即可,不要有其他任何多余的输出,仅输出'这张图片描述了xxxxxx'即可"
+                    }
+                ],
+                "role": "user"
+            }
+        ],
+        thinking={
+            "type": "disabled"
+        }
+    )
+    res = response.choices[0].message.content
+    # msg = [{"role": "user", "content": [
+    #     {"type": "text", "text": "这是用户屏幕的截图,详细描述图片上的内容,仅仅是描述即可,不要有其他任何多余的输出,仅输出'这张图片描述了xxxxxx'即可"},
+    #     {"type": "image_url", "image_url": {"url": img_data_uri}},
+    # ]}]
 
-    res = llm.get_agent_nopic().invoke({
-        "messages":msg
-    })
+    # res = llm.get_agent_nopic().invoke({
+    #     "messages":msg
+    # })
 
-    latest_message = res["messages"][-1]
-    if latest_message.content:
-        res=latest_message.content.strip()
+    # latest_message = res["messages"][-1]
+    # if latest_message.content:
+    #     res=latest_message.content.strip()
 
-    print("图像识别Tool中段输出:"+res)
+    print(f"图像识别Tool中段输出:{res}")
 
     return res
 
@@ -77,3 +103,4 @@ def online_search_tool(input:str):
 @tool(description="知识图谱记忆搜索")
 def graph_search_tool(input:str):
     return memory.graph_memory.search_quintuples(input)
+
